@@ -1,0 +1,8 @@
+# Created by container docker-samba-ad 
+# Do not edit.
+#
+
+# Samba DNS for AD DC
+nameserver 127.0.0.1
+# Serach for domian
+search DOMAIN_NAME_LOWERCASE

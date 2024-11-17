@@ -1,0 +1,59 @@
+networks:
+  samba-network:
+    driver: bridge
+
+volumes:
+  samba-etc:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /d/mercury/samba/etc
+  samba-logs:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /d/mercury/samba/logs
+  samba-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /d/mercury/samba/data
+ 
+services:
+  openldap:
+    image: scisoftware/samba-ad-dc:ubuntu-24.04
+    networks:
+      - samba-network
+    hostname: ${AD_HOST_NAME}
+    environment:
+      - AD_DOMAIN=${AD_DOMAIN}
+      - AD_REALM=${AD_REALM}
+      - AD_ADMIN_PASSWORD=${AD_ADMIN_PASSWORD:-Passw0rd}
+      - SERVER_DEBUG=${SERVER_DEBUG:-0}
+    volumes: 
+      - samba-etc:/etc/samba:rw
+      - samba-logs:/var/log/samba:rw
+      - samba-data:/var/lib/samba:rw
+    ports:
+#      - 53:53
+#      - 53:53/udp
+#      - 88:88
+#      - 88:88/udp
+#      - 123:123
+#      - 135:135
+#      - 137-138:137-138/udp
+#      - 139:139
+      - 389:389
+      - 389:389/udp
+#      - 445:445
+#      - 464:464
+#      - 464:464/udp
+      - 636:636
+#      - 3268-3269:3268-3269
+#      - 49152-49170:49152-49170
+    cap_add:
+      - SYS_ADMIN
+    privileged: true
